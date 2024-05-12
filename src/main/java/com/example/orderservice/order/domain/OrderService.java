@@ -6,11 +6,12 @@ import com.example.orderservice.order.event.OrderAcceptedMessage;
 import com.example.orderservice.order.event.OrderDispatchedMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Service
 public class OrderService {
@@ -27,8 +28,8 @@ public class OrderService {
 		this.streamBridge = streamBridge;
 	}
 
-	public Flux<Order> getAllOrders() {
-		return orderRepository.findAll();
+	public Flux<Order> getAllOrders(String userId) {
+		return orderRepository.findAllByCreatedBy(userId);
 	}
 
 	@Transactional
@@ -76,6 +77,8 @@ public class OrderService {
 			OrderStatus.DISPATCHED,
 			existingOrder.createdDate(),
 			existingOrder.lastModifiedDate(),
+			existingOrder.createdBy(),
+			existingOrder.lastModifiedBy(),
 			existingOrder.version()
 		);
 	}
