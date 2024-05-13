@@ -76,7 +76,7 @@ class OrderServiceApplicationTests {
 		registry.add("spring.flyway.url", postgresql::getJdbcUrl);
 
 		registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri",
-				() -> keycloakContainer.getAuthServerUrl() + "/realms/PolarBookshop");
+				() -> keycloakContainer.getAuthServerUrl() + "/realms/Bookshop");
 	}
 
 	private static String r2dbcUrl() {
@@ -87,7 +87,7 @@ class OrderServiceApplicationTests {
 	@BeforeAll
 	static void generateAccessTokens() {
 		WebClient webClient = WebClient.builder()
-				.baseUrl(keycloakContainer.getAuthServerUrl() + "/realms/PolarBookshop/protocol/openid-connect/token")
+				.baseUrl(keycloakContainer.getAuthServerUrl() + "/realms/Bookshop/protocol/openid-connect/token")
 				.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 				.build();
 
@@ -214,7 +214,7 @@ class OrderServiceApplicationTests {
 		return webClient
 				.post()
 				.body(BodyInserters.fromFormData("grant_type", "password")
-						.with("client_id", "polar-test")
+						.with("client_id", "bookshop-test")
 						.with("username", username)
 						.with("password", password)
 				)
